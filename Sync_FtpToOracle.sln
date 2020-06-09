@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sync_FtpToOracle", "Sync_FtpToOracle.csproj", "{7B5E4617-F32D-42C1-B5B7-1BA187B888F2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B5E4617-F32D-42C1-B5B7-1BA187B888F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B5E4617-F32D-42C1-B5B7-1BA187B888F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B5E4617-F32D-42C1-B5B7-1BA187B888F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B5E4617-F32D-42C1-B5B7-1BA187B888F2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C20B0918-4998-4B13-9F7E-799CB1D3E751}
+	EndGlobalSection
+EndGlobal
