@@ -113,18 +113,18 @@ namespace Sync_FtpToOracle
         }
         static void Main(string[] args)
         {
-            if (args.Length == 0)
+          /*  if (args.Length == 0)
             {
                 Console.WriteLine("Введите параметром к запуску аргумент - путь до папки");
             }
-
+            */
         //FileWork fw = new FileWork(args[0]);
         //D:\ccc
             string x = $"D:\\ccc/1/1.txt";
             string y = $"D:\\ccc";
             // контекст подключения к БД
             var options = new DbContextOptionsBuilder<OrdersDBContext>()
-                .UseOracle(Database.ConnectionStringTest)
+                .UseOracle(Database.ConnectionString)
                 .Options;
 
             //создаем обьект класса работы с файлами и директориями
@@ -137,12 +137,7 @@ namespace Sync_FtpToOracle
             listImport = fw.FileIn();
             Console.WriteLine($"сформировано {listImport.Count} обьектов");
 
-            xmls = fw.InDir();
-            foreach (xml a in xmls)
-            {
-
-                Console.WriteLine($"путь {a.path }-- номер {a.eis_number}-- ооскей {a.ooskey}-- имя {a.name}");
-            }
+            
 
             foreach (OrderdocApp order in listImport)
             {
@@ -161,17 +156,22 @@ namespace Sync_FtpToOracle
                 using (OrdersDBContext dbc = new OrdersDBContext(options))
                 {
                     var orderdocs = dbc.ORDERDOC.Where(x => x.ID == order.ID).ToList();
+
                     try
                     {
-                       if( orderdocs[0]==null)
-                        {
-
+                        orderdocs[0].OOS_DOC_NUMBER = order.OOS_DOC_NUMBER;
+                        orderdocs[0].OOSKEY = order.OOSKEY;
+                        orderdocs[0].DISPSTATUS_ID = 51;
+                        dbc.SaveChanges();
+                            Console.WriteLine($"{order.ID} обьект добавлен");
                         }
-                    }
-                    orderdocs[0].OOS_DOC_NUMBER = order.OOS_DOC_NUMBER;
-                    orderdocs[0].OOSKEY = order.OOSKEY;
-                    orderdocs[0].DISPSTATUS_ID = 51;
-                    dbc.SaveChanges();
+
+                        catch
+                        {
+                            Console.WriteLine($"Необходимо проверить решение по ИД {order.ID}");
+                            Console.ReadKey();
+                        }
+                    
                     
                 }
             }
