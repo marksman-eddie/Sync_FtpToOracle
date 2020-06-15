@@ -120,39 +120,72 @@ namespace Sync_FtpToOracle
             
             string x = "d:/ccc/1/1.txt";
             string y = "d:/ccc";
+            // контекст подключения к БД
+            var options = new DbContextOptionsBuilder<OrdersDBContext>()
+                .UseOracle(Database.ConnectionStringTest)
+                .Options;
+
+            //создаем обьект класса работы с файлами и директориями
             FileWork fw = new FileWork(x,y);
+            //Создаем коллекции обьектов 
             List<OrderdocApp> listImport = new List<OrderdocApp>();
+            List<Orderdoc> OrderToDBList = new List<Orderdoc>();
+            List<xml> xmls = new List<xml>();
+
             listImport = fw.FileIn();
             Console.WriteLine($"сформировано {listImport.Count} обьектов");
-           /* List<xml> xmls  = new List<xml>();
+            
             xmls = fw.InDir();
             foreach (xml a in xmls )
             {
 
-                Console.WriteLine($"путь {a.path }--номер {a.eis_number}-- ооскей {a.ooskey} имя {a.name}");
+                Console.WriteLine($"путь {a.path }-- номер {a.eis_number}-- ооскей {a.ooskey}-- имя {a.name}");
             }
-
-            foreach(Orderdoc order in listImport)
+            
+            foreach(OrderdocApp order in listImport)
             {
                 Comparison(order, xmls);
-                Console.WriteLine($"имя {order.azk_id}-- ооскей {order.ooskey}-- номер {order.eis_number}-- путь {order.pathToXml}");
-            }*/
+                Console.WriteLine($"id {order.ID}-- ооскей {order.OOSKEY}-- номер {order.OOS_DOC_NUMBER}-- путь {order.pathToXml}");
+                Orderdoc orderdocDB = new Orderdoc();
+                orderdocDB.ID = order.ID;
+                orderdocDB.OOSKEY = order.OOSKEY;
+                orderdocDB.OOS_DOC_NUMBER = order.OOS_DOC_NUMBER;
+                OrderToDBList.Add(orderdocDB);
+
+            }
+
+            foreach (Orderdoc order in OrderToDBList)
+            {
+                using (OrdersDBContext dbc = new OrdersDBContext(options))
+                {
+                    var orderdocs = dbc.ORDERDOC.Find(order.ID);
+                    orderdocs.OOS_DOC_NUMBER = order.OOS_DOC_NUMBER;
+                    orderdocs.OOSKEY = order.OOSKEY;
+                    orderdocs.DISPSTATUS_ID = 51;
+                    dbc.SaveChanges();
+
+                }
+            }
+           
+
             
-            var options = new DbContextOptionsBuilder<OrdersDBContext>()
-                .UseOracle(Database.ConnectionString)
-                .Options;
+            
+            
 
-
+/*
             using (OrdersDBContext dbc = new OrdersDBContext(options))
             {
                 var orderdocs = dbc.ORDERDOC.//FirstOrDefault();
-                   Where(x => x.ID == 165709).ToList();
+                   Where(x => x.ID == 166251).ToList();
                foreach (var order in orderdocs)
-                    Console.WriteLine($"{order.OOS_DOC_NUMBER}");
+                    Console.WriteLine($"{order.OOS_DOC_NUMBER} ili nihera");
                 //Console.WriteLine(orderdocs.ToListAsync().ToString()) ;
 
-            // zalupa
-            }
+            
+            }*/
+
+
+
             
 
 

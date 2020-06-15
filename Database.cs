@@ -11,6 +11,16 @@ namespace Sync_FtpToOracle
     {
 
         public static string ConnectionString =
-                          "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.12.128.2)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=AZK)));User Id=gz_tumen;Password=gz_tumen;";
+                          "Data Source=(DESCRIPTION=" +
+            "(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.12.128.2)(PORT=1521))" +
+            ")(CONNECT_DATA=(SERVICE_NAME=AZK)))" +
+            ";User Id=gz_tumen;Password=gz_tumen;";
+
+        public static string ConnectionStringTest = 
+                          "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.24.3.198)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=AZK)));User Id=gz_tumen;Password=gz_tumen;";
+
+
+
+       
     }
 }
