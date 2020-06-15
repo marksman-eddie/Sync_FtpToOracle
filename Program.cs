@@ -136,8 +136,13 @@ namespace Sync_FtpToOracle
 
             listImport = fw.FileIn();
             Console.WriteLine($"сформировано {listImport.Count} обьектов");
+            xmls = fw.InDir();
+            foreach (xml a in xmls)
+            {
+                Console.WriteLine($"путь {a.path }-- номер {a.eis_number}-- ооскей {a.ooskey}-- имя {a.name}");
+            }
 
-            
+
 
             foreach (OrderdocApp order in listImport)
             {
@@ -155,7 +160,7 @@ namespace Sync_FtpToOracle
             {
                 using (OrdersDBContext dbc = new OrdersDBContext(options))
                 {
-                    var orderdocs = dbc.ORDERDOC.Where(x => x.ID == order.ID).ToList();
+                     var orderdocs = dbc.ORDERDOC.Where(x => x.ID == order.ID).ToList();
 
                     try
                     {
