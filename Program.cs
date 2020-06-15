@@ -150,6 +150,8 @@ namespace Sync_FtpToOracle
                foreach (var order in orderdocs)
                     Console.WriteLine($"{order.OOS_DOC_NUMBER}");
                 //Console.WriteLine(orderdocs.ToListAsync().ToString()) ;
+
+            // zalupa
             }
             
 
