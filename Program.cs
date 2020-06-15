@@ -6,6 +6,8 @@ using System.Text;
 using System.Collections.Generic;
 using Oracle.ManagedDataAccess.Client;
 using Microsoft.EntityFrameworkCore;
+using System.Management;
+using System.Threading;
 
 
 
@@ -84,13 +86,13 @@ namespace Sync_FtpToOracle
     class Program
     {
 
-       
+
         static void Comparison(OrderdocApp order, List<xml> xmlList)
         {
-            foreach(xml x in xmlList)
+            foreach (xml x in xmlList)
             {
-                
-                if (x.eis_number==order.OOS_DOC_NUMBER)
+
+                if (x.eis_number == order.OOS_DOC_NUMBER)
                 {
                     if (order.OOSKEY == null)
                     {
@@ -100,33 +102,33 @@ namespace Sync_FtpToOracle
                     int a, b;
                     a = Convert.ToInt32(order.OOSKEY);
                     b = Convert.ToInt32(x.ooskey);
-                    if (a<b)
+                    if (a < b)
                     {
                         order.OOSKEY = x.ooskey;
                         order.pathToXml = x.path;
                     }
                 }
-                
+
             }
         }
         static void Main(string[] args)
         {
-            /*if (args.Length == 0)
+            if (args.Length == 0)
             {
                 Console.WriteLine("Введите параметром к запуску аргумент - путь до папки");
             }
-            */
-            //FileWork fw = new FileWork(args[0]);
-            
-            string x = "d:/ccc/1/1.txt";
-            string y = "d:/ccc";
+
+        //FileWork fw = new FileWork(args[0]);
+        //D:\ccc
+            string x = $"D:\\ccc/1/1.txt";
+            string y = $"D:\\ccc";
             // контекст подключения к БД
             var options = new DbContextOptionsBuilder<OrdersDBContext>()
                 .UseOracle(Database.ConnectionStringTest)
                 .Options;
 
             //создаем обьект класса работы с файлами и директориями
-            FileWork fw = new FileWork(x,y);
+            FileWork fw = new FileWork(x, y);
             //Создаем коллекции обьектов 
             List<OrderdocApp> listImport = new List<OrderdocApp>();
             List<Orderdoc> OrderToDBList = new List<Orderdoc>();
@@ -134,15 +136,15 @@ namespace Sync_FtpToOracle
 
             listImport = fw.FileIn();
             Console.WriteLine($"сформировано {listImport.Count} обьектов");
-            
+
             xmls = fw.InDir();
-            foreach (xml a in xmls )
+            foreach (xml a in xmls)
             {
 
                 Console.WriteLine($"путь {a.path }-- номер {a.eis_number}-- ооскей {a.ooskey}-- имя {a.name}");
             }
-            
-            foreach(OrderdocApp order in listImport)
+
+            foreach (OrderdocApp order in listImport)
             {
                 Comparison(order, xmls);
                 Console.WriteLine($"id {order.ID}-- ооскей {order.OOSKEY}-- номер {order.OOS_DOC_NUMBER}-- путь {order.pathToXml}");
@@ -153,36 +155,64 @@ namespace Sync_FtpToOracle
                 OrderToDBList.Add(orderdocDB);
 
             }
-
+            
             foreach (Orderdoc order in OrderToDBList)
             {
                 using (OrdersDBContext dbc = new OrdersDBContext(options))
                 {
-                    var orderdocs = dbc.ORDERDOC.Find(order.ID);
-                    orderdocs.OOS_DOC_NUMBER = order.OOS_DOC_NUMBER;
-                    orderdocs.OOSKEY = order.OOSKEY;
-                    orderdocs.DISPSTATUS_ID = 51;
-                    dbc.SaveChanges();
+                    var orderdocs = dbc.ORDERDOC.Where(x => x.ID == order.ID).ToList();
+                    try
+                    {
+                       if( orderdocs[0]==null)
+                        {
 
+                        }
+                    }
+                    orderdocs[0].OOS_DOC_NUMBER = order.OOS_DOC_NUMBER;
+                    orderdocs[0].OOSKEY = order.OOSKEY;
+                    orderdocs[0].DISPSTATUS_ID = 51;
+                    dbc.SaveChanges();
+                    
                 }
             }
-           
-
-            1
-            
             
 
-/*
-            using (OrdersDBContext dbc = new OrdersDBContext(options))
-            {
-                var orderdocs = dbc.ORDERDOC.//FirstOrDefault();
-                   Where(x => x.ID == 166251).ToList();
-               foreach (var order in orderdocs)
-                    Console.WriteLine($"{order.OOS_DOC_NUMBER} ili nihera");
-                //Console.WriteLine(orderdocs.ToListAsync().ToString()) ;
 
+            /* static void MapDriveECS()
+             {
+                 String myUser = "smbuser";
+                 String myPass = "63257u6bc";
+                 String cmdString = "net use \\\\10.12.128.6\\44FZ /user:" + myUser + " " + myPass;
+                 Console.WriteLine(cmdString);
+                 ManagementClass processClass = new ManagementClass("Win32_Process");
+                 object[] methodArgs = { cmdString, null, null, 0 };
+                 object result = processClass.InvokeMethod("Create", methodArgs);
+
+                 Console.WriteLine("Creation of process returned: " + result);
+                 Console.WriteLine("Process ID: {0}", methodArgs[3]);
+             }
+             MapDriveECS();
+
+             Thread.Sleep(60000);
+
+
+
+             foreach (OrderdocApp order in listImport)
+             {
+
+                 string pathDst = "\\\\10.12.128.6\\44FZ";
+                 string name = Path.GetFileName(order.pathToXml);
+                 string newPath = Path.Combine(pathDst, name);
+                 File.Move(order.pathToXml, newPath);
+
+             }
+             */
+
+
+
+
+        } 
             
-            }*/
 
 
 
@@ -195,4 +225,4 @@ namespace Sync_FtpToOracle
 
         }
     }
-}
+
