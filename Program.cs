@@ -176,8 +176,9 @@ namespace Sync_FtpToOracle
                             Console.WriteLine($"Необходимо проверить решение по ИД {order.ID}");
                             Console.ReadKey();
                         }
-                    
-                    
+
+                    Console.ReadKey();
+
                 }
             }
             
@@ -200,18 +201,18 @@ namespace Sync_FtpToOracle
 
              Thread.Sleep(60000);
 
-
+            */
 
              foreach (OrderdocApp order in listImport)
              {
 
-                 string pathDst = "\\\\10.12.128.6\\44FZ";
+                 string pathDst = "D:\\ccc/2";
                  string name = Path.GetFileName(order.pathToXml);
                  string newPath = Path.Combine(pathDst, name);
                  File.Move(order.pathToXml, newPath);
 
              }
-             */
+             
 
 
 
